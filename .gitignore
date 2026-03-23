@@ -1,0 +1,18 @@
+# IDEs
+.idea/
+cmake-build-debug/
+cmake-build-release/
+build
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Compiled Binaries
+*.o
+*.obj
+*.exe
+.clang-format
+.vscode
+# To this:
+vendored/**/build/
+vendored/**/cmake-build-*/
