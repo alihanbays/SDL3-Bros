@@ -1,6 +1,6 @@
 #include "ExitState.h"
 #include "Constants.h"
-#include "Globals.h"
+#include "../Headers/Globals.h"
 #include "../Headers/Util.h"
 
 ExitState ExitState::exitState;

@@ -1,4 +1,4 @@
-#include "Globals.h"
+#include "../Headers/Globals.h"
 
 SDL_Window* window{nullptr};
 SDL_Renderer* renderer{nullptr};

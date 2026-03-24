@@ -1,8 +1,8 @@
-#include "Util.h"
-#include "Audio.h"
-#include "Constants.h"
+#include "../Headers/Util.h"
+#include "../Headers/Audio.h"
+#include "../Headers/Constants.h"
 #include "ExitState.h"
-#include "Globals.h"
+#include "../Headers/Globals.h"
 #include <SDL3/SDL.h>
 #include <SDL3_ttf/SDL_ttf.h>
 #include <string>
@@ -104,8 +104,6 @@ void handleCollision(SDL_FRect* a, SDL_FRect* b)
 
     const float xOverlap = std::min(aXmax, bXmax) - std::max(aXmin, bXmin);
     const float yOverlap = std::min(aYmax, bYmax) - std::max(aYmin, bYmin);
-
-    SDL_Log("X Overlap: %f, Y Overlap: %f", xOverlap, yOverlap);
 
     if (xOverlap < yOverlap)
     {

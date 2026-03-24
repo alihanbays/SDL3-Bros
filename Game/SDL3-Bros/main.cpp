@@ -12,11 +12,11 @@
 #define SDL_MAIN_USE_CALLBACKS 1 /* use the callbacks instead of main() */
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
-#include "Globals.h"
-#include "Constants.h"
-#include "testState.h"
-#include "Util.h"
-#include "ExitState.h"
+#include "Headers/Globals.h"
+#include "Headers/Constants.h"
+#include "TestState.h"
+#include "Headers/Util.h"
+#include "Headers/ExitState.h"
 
 /* This function runs once at startup. */
 SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])

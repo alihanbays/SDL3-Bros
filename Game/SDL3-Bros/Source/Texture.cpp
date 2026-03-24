@@ -1,5 +1,5 @@
 #include "Texture.h"
-#include "Globals.h"
+#include "../Headers/Globals.h"
 #include <SDL3_image/SDL_image.h>
 #include <SDL3_ttf/SDL_ttf.h>
 #include <string>
