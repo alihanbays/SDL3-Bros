@@ -16,3 +16,4 @@ Thumbs.db
 # To this:
 vendored/**/build/
 vendored/**/cmake-build-*/
+AGENTS.md

@@ -27,13 +27,13 @@ bool init()
         success = false;
     }
 
-    if (!SDL_CreateWindowAndRenderer("Pong", 1024, 960, SDL_WINDOW_RESIZABLE, &window, &renderer))
+    if (!SDL_CreateWindowAndRenderer("Pong", WindowWidth, WindowHeight, SDL_WINDOW_RESIZABLE, &window, &renderer))
     {
         SDL_Log("SDL could not create window and renderer! SDL error: %s\n", SDL_GetError());
         success = false;
     }
 
-    SDL_SetRenderLogicalPresentation(renderer, ScreenWidth, ScreenHeight, SDL_LOGICAL_PRESENTATION_LETTERBOX);
+    SDL_SetRenderLogicalPresentation(renderer, RenderWidth, RenderHeight, SDL_LOGICAL_PRESENTATION_LETTERBOX);
 
     if (!TTF_Init())
     {
@@ -91,7 +91,7 @@ bool AABB(const SDL_FRect& a, const SDL_FRect& b)
     return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
 }
 
-void handleCollision(SDL_FRect* a, SDL_FRect* b)
+void handleCollision(Vec2* worldPos, SDL_FRect* a, SDL_FRect* b)
 {
     const float aXmin{a->x};
     const float aXmax{a->x + a->w};
@@ -109,22 +109,27 @@ void handleCollision(SDL_FRect* a, SDL_FRect* b)
     {
         if (aXmax > bXmax)
         {
-            a->x += xOverlap;
+            worldPos->x += xOverlap;
         }
         else
         {
-            a->x -= xOverlap;
+            worldPos->x -= xOverlap;
         }
     }
     else if (xOverlap >= yOverlap)
     {
         if (aYmax > bYmax)
         {
-            a->y += yOverlap;
+            worldPos->y += yOverlap;
         }
         else
         {
-            a->y -= yOverlap;
+            worldPos->y -= yOverlap;
         }
     }
+}
+
+Vec2 ToScreenSpace(const Vec2& v, const SDL_FRect& body)
+{
+    return Vec2{v.x, RenderHeight - v.y - body.h};
 }

@@ -2,7 +2,7 @@
 #define TESTSTATE_H
 #include <vector>
 #include <SDL3/SDL.h>
-#include "GameActor.h"
+#include "GameObject.h"
 #include "GameState.h"
 
 // Abstract state machine
@@ -15,17 +15,17 @@ public:
   void handleEvent(SDL_Event& e) override;
   void update() override;
   void render() override;
-  void addGravity(GameActor* actor);
-  void addFriction(GameActor* actor);
+  void addGravity(GameObject* actor);
+  void addFriction(GameObject* actor);
 
 private:
-  static TestState testState;
+  static TestState testState_;
   TestState();
-  Texture spriteSheetTexture;
-  std::vector<GameActor*> actors;
-  GameActor* playerActor;
-  SDL_FRect ground{};
-  const bool* keyboardState;
+  Texture spriteSheetTexture_;
+  std::vector<GameObject*> gameObjects_;
+  GameObject* playerObject_;
+  GameObject* groundObject_;
+  const bool* keyboardState_;
 };
 
 #endif

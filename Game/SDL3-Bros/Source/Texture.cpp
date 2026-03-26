@@ -4,7 +4,7 @@
 #include <SDL3_ttf/SDL_ttf.h>
 #include <string>
 
-Texture::Texture() : texture{nullptr}, width{0}, height{0} {}
+Texture::Texture() : texture_{nullptr}, width_{0}, height_{0} {}
 
 Texture::~Texture()
 {
@@ -13,10 +13,10 @@ Texture::~Texture()
 
 void Texture::destroy()
 {
-    SDL_DestroyTexture(texture);
-    texture = nullptr;
-    width = 0;
-    height = 0;
+    SDL_DestroyTexture(texture_);
+    texture_ = nullptr;
+    width_ = 0;
+    height_ = 0;
 }
 
 bool Texture::createTextTexture(const std::string& textureText)
@@ -30,15 +30,15 @@ bool Texture::createTextTexture(const std::string& textureText)
         return false;
     }
 
-    texture = SDL_CreateTextureFromSurface(renderer, surface);
-    if (texture == nullptr)
+    texture_ = SDL_CreateTextureFromSurface(renderer, surface);
+    if (texture_ == nullptr)
     {
         SDL_Log("loadFromRenderedText: texture null");
         return false;
     }
 
-    width = surface->w;
-    height = surface->h;
+    width_ = surface->w;
+    height_ = surface->h;
 
     SDL_DestroySurface(surface);
     return true;
@@ -55,16 +55,16 @@ bool Texture::loadFromFile(const std::string& path)
         return false;
     }
 
-    texture = SDL_CreateTextureFromSurface(renderer, surface);
-    if (!texture)
+    texture_ = SDL_CreateTextureFromSurface(renderer, surface);
+    if (!texture_)
     {
         SDL_Log("loadFromFile: surface is null");
         return false;
     }
 
-    width = surface->w;
+    width_ = surface->w;
 
-    height = surface->h;
+    height_ = surface->h;
 
     SDL_DestroySurface(surface);
     return true;
@@ -73,7 +73,7 @@ bool Texture::loadFromFile(const std::string& path)
 void Texture::render(const float x, const float y, const SDL_FRect* clip) const
 {
     // Set texture position
-    SDL_FRect dstRect{x, y, static_cast<float>(width), static_cast<float>(height)};
+    SDL_FRect dstRect{x, y, static_cast<float>(width_), static_cast<float>(height_)};
 
     if (clip != nullptr)
     {
@@ -82,15 +82,15 @@ void Texture::render(const float x, const float y, const SDL_FRect* clip) const
     }
 
     // Render texture
-    SDL_RenderTexture(renderer, this->texture, clip, &dstRect);
+    SDL_RenderTexture(renderer, this->texture_, clip, &dstRect);
 }
 
 int Texture::getHeight() const
 {
-    return height;
+    return height_;
 }
 
 int Texture::getWidth() const
 {
-    return width;
+    return width_;
 }

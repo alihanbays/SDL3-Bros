@@ -3,11 +3,15 @@
 #include <SDL3/SDL.h>
 #include <sstream>
 
-class GameActor
+#include "Vec2.h"
+
+class GameObject
 {
 public:
-    GameActor();
-    ~GameActor() = default;
+    GameObject();
+    GameObject(const Vec2& worldPos, const SDL_FRect& collisionBody);
+    GameObject(const Vec2& worldPos, const SDL_FRect& collisionBody, const SDL_FRect& textureClip);
+    ~GameObject() = default;
     float jumpPower = 140.f;
     float moveSpeed = 400.f;
     float maxSpeed = 60.f;
@@ -20,15 +24,18 @@ public:
     void jump();
     void control(const SDL_Event& e);
     void move();
-    void setPosition(float x, float y);
-    void setTextureClip(float x, float y, float w, float h);
+    void setPosition(const Vec2& v);
+    void setTextureClip(const SDL_FRect& textureClip);
     void destroy();
-    SDL_FRect* getCollisionBox();
-    SDL_FRect* getTextureClip();
+    SDL_FRect& getCollisionBox();
+    Vec2& getPosition();
+    SDL_FRect& getTextureClip();
+    void syncLocation();
 
 private:
     SDL_FRect collisionBody_{};
     SDL_FRect textureClip_{};
+    Vec2 worldPos_{};
     float dx_{};
     float dy_{};
     bool isOnGround_{false};

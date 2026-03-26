@@ -3,41 +3,40 @@
 #include "../Headers/Globals.h"
 #include "../Headers/Util.h"
 
-TestState TestState::testState;
+TestState TestState::testState_;
 
 TestState::TestState() = default;
 
 TestState* TestState::get()
 {
-    return &testState;
+    return &testState_;
 }
 
 bool TestState::enter()
 {
     bool success{true};
 
-    if (spriteSheetTexture.loadFromFile("Game/SDL3-Bros/Assets/spritesheet.png") == false)
+    if (spriteSheetTexture_.loadFromFile("Game/SDL3-Bros/Assets/spritesheet.png") == false)
     {
         SDL_Log("TestState::enter(): Failed load spritesheet");
         success = false;
     }
 
-    // Lets create character
-    // Place playerif
-    auto* player = new GameActor();
-    player->setPosition(0, 0);
-    player->setTextureClip(0, 0, 16, 16); // 0,0 location 16x16 size
+    // Place player
+    auto* player = new GameObject({50, 50}, {50, 50, 16, 16}, {0, 0, 16, 16});
 
     // Place Goomba
-    // auto* goomba = new GameActor();
-    // goomba->setPosition(16, 0);
-    // goomba->setTextureClip(16, 0, 16, 16); // 0,0 location 16x16 size
+    auto* goomba = new GameObject({100, 100}, {100, 100, 16, 16}, {16, 0, 16, 16});
 
-    playerActor = player;
-    actors.push_back(player);
-    //actors.push_back(goomba);
+    // Place Ground
+    auto* ground = new GameObject({0, 0}, {0, 0, 2000.f, 20.f,});
 
-    keyboardState = SDL_GetKeyboardState(nullptr);
+    playerObject_ = player;
+    groundObject_ = ground;
+    gameObjects_.push_back(player);
+    gameObjects_.push_back(goomba);
+
+    keyboardState_ = SDL_GetKeyboardState(nullptr);
     return success;
 }
 
@@ -48,57 +47,56 @@ bool TestState::exit()
 
 void TestState::handleEvent(SDL_Event& e)
 {
-    if (keyboardState[SDL_SCANCODE_A])
+    if (keyboardState_[SDL_SCANCODE_A])
     {
-        playerActor->setXVelocity(playerActor->moveSpeed * -1);
+        playerObject_->setXVelocity(playerObject_->moveSpeed * -1);
     }
-    if (keyboardState[SDL_SCANCODE_D])
+    if (keyboardState_[SDL_SCANCODE_D])
     {
-        playerActor->setXVelocity(playerActor->moveSpeed);
+        playerObject_->setXVelocity(playerObject_->moveSpeed);
     }
-    if (keyboardState[SDL_SCANCODE_SPACE])
+    if (keyboardState_[SDL_SCANCODE_SPACE])
     {
-        playerActor->jump();
+        playerObject_->jump();
     }
 }
 
 void TestState::render()
 {
-    for (GameActor* actor : actors)
+    for (GameObject* actor : gameObjects_)
     {
-        spriteSheetTexture.render(actor->getCollisionBox()->x, actor->getCollisionBox()->y, actor->getTextureClip());
+        auto [x, y] = ToScreenSpace(actor->getPosition(), actor->getCollisionBox());
+        spriteSheetTexture_.render(x, y, &actor->getTextureClip());
     }
 
     // Render temporary ground
     SDL_SetRenderDrawColor(renderer, 0, 255, 255, 255);
-    ground = {
-        0.f,
-        210.f,
-        2000.f,
-        20.f,
-    };
-    SDL_RenderFillRect(renderer, &ground);
+    auto [x, y] = ToScreenSpace(groundObject_->getPosition(), groundObject_->getCollisionBox());
+    auto box = groundObject_->getCollisionBox();
+    box.x = x;
+    box.y = y;
+    SDL_RenderFillRect(renderer, &box);
 }
 
-void TestState::addGravity(GameActor* actor) { actor->setYVelocity(gravity); }
+void TestState::addGravity(GameObject* actor) { actor->setYVelocity(gravity); }
 
-void TestState::addFriction(GameActor* actor) { actor->setXVelocity(actor->getXVelocity() * friction, true); }
+void TestState::addFriction(GameObject* actor) { actor->setXVelocity(actor->getXVelocity() * friction, true); }
 
 void TestState::update()
 {
-    for (GameActor* actor : actors)
+    for (GameObject* actor : gameObjects_)
     {
         addGravity(actor);
         actor->move();
 
         // Handle Collision
-        if (AABB(*actor->getCollisionBox(), ground))
+        if (AABB(actor->getCollisionBox(), groundObject_->getCollisionBox()))
         {
-            handleCollision(actor->getCollisionBox(), &ground);
+            handleCollision(&actor->getPosition(), &actor->getCollisionBox(), &groundObject_->getCollisionBox());
             actor->setYVelocity(0, true);
         }
 
-        if (!keyboardState[SDL_SCANCODE_A] && !keyboardState[SDL_SCANCODE_D])
+        if (!keyboardState_[SDL_SCANCODE_A] && !keyboardState_[SDL_SCANCODE_D])
             addFriction(actor);
     }
 }

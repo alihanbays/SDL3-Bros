@@ -1,5 +1,3 @@
-set(CMAKE_CXX_STANDARD 26)
-
 add_executable(SDL3-Bros
         Source/TestState.cpp
         Source/Audio.cpp
@@ -7,8 +5,9 @@ add_executable(SDL3-Bros
         Source/Globals.cpp
         Source/Texture.cpp
         Source/Util.cpp
-        Source/GameActor.cpp
+        Source/GameObject.cpp
         main.cpp
+        Headers/Vec2.h
 )
 
 target_include_directories(SDL3-Bros PRIVATE Headers)

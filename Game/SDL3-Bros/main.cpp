@@ -55,6 +55,9 @@ SDL_AppResult SDL_AppIterate(void* appstate)
 {
     frameStart = SDL_GetTicksNS();
     deltaTime = (frameStart - lastTick) / 1000000000.f;
+    if (deltaTime > 0.0166666667)
+        deltaTime = 0.0166666667;
+
     currentState->update();
 
     if (changeState() == false)
