@@ -15,11 +15,11 @@ public:
     void render() override;
 
 private:
-    static ExitState exitState;
+    static ExitState exitState_;
     ExitState();
-    Texture messageTexture;
-    Uint64 startingFrame{};
-    Uint64 delay{};
+    Texture messageTexture_;
+    Uint64 startingFrame_{};
+    Uint64 delay_{};
 };
 
 #endif

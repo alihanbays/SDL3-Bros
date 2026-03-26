@@ -20,9 +20,9 @@ public:
   int getWidth() const;
 
 private:
-  SDL_Texture* texture;
-  int width;
-  int height;
+  SDL_Texture* texture_;
+  int width_;
+  int height_;
 };
 
 #endif
