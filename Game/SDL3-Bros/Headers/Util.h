@@ -12,6 +12,5 @@ void setNextState(GameState* state);
 bool changeState();
 bool AABB(const SDL_FRect& a, const SDL_FRect& b);
 void handleCollision(Vec2* worldPos, SDL_FRect* a, SDL_FRect* b);
-Vec2 ToScreenSpace(const Vec2& v, const SDL_FRect& body);
 
 #endif

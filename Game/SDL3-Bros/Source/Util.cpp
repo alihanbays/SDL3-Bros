@@ -128,8 +128,3 @@ void handleCollision(Vec2* worldPos, SDL_FRect* a, SDL_FRect* b)
         }
     }
 }
-
-Vec2 ToScreenSpace(const Vec2& v, const SDL_FRect& body)
-{
-    return Vec2{v.x, RenderHeight - v.y - body.h};
-}

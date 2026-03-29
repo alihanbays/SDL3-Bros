@@ -37,6 +37,7 @@ bool TestState::enter()
     gameObjects_.push_back(goomba);
 
     keyboardState_ = SDL_GetKeyboardState(nullptr);
+    cameraPosition_ = {0, 0};
     return success;
 }
 
@@ -99,4 +100,19 @@ void TestState::update()
         if (!keyboardState_[SDL_SCANCODE_A] && !keyboardState_[SDL_SCANCODE_D])
             addFriction(actor);
     }
+
+    auto playerCenter = playerObject_->getPosition() + Vec2{
+        playerObject_->getCollisionBox().w / 2, playerObject_->getCollisionBox().h / 2
+    };
+    Vec2 cameraOffset{10, 50};
+    playerCenter += cameraOffset;
+    cameraPosition_ = playerCenter - Vec2{RenderWidth / 2, RenderHeight / 2};
 }
+
+Vec2 TestState::ToScreenSpace(const Vec2& v, const SDL_FRect& body)
+{
+    auto [x,y]{ToCameraSpace(v)};
+    return Vec2{x, RenderHeight - y - body.h};
+}
+
+Vec2 TestState::ToCameraSpace(const Vec2& v) const { return v - cameraPosition_; }
